@@ -35,6 +35,7 @@
         this.distanceMeter = null;
         this.distanceRan = 0;
 
+        this.duckScore = 0;
         this.highestScore = 0;
 
         this.time = 0;
@@ -467,9 +468,9 @@
                     'from { width:' + Trex.config.WIDTH + 'px }' +
                     'to { width: ' + this.dimensions.WIDTH + 'px }' +
                     '}';
-                
-                // create a style sheet to put the keyframe rule in 
-                // and then place the style sheet in the html head    
+
+                // create a style sheet to put the keyframe rule in
+                // and then place the style sheet in the html head
                 var sheet = document.createElement('style');
                 sheet.innerHTML = keyframes;
                 document.head.appendChild(sheet);
@@ -565,8 +566,11 @@
                     this.gameOver();
                 }
 
+                //var playAchievementSound = this.distanceMeter.update(deltaTime,
+                //    Math.ceil(this.distanceRan));
+
                 var playAchievementSound = this.distanceMeter.update(deltaTime,
-                    Math.ceil(this.distanceRan));
+                    Math.ceil(this.duckScore));
 
                 if (playAchievementSound) {
                     this.playSound(this.soundFx.SCORE);
@@ -701,6 +705,7 @@
                 } else if (!this.tRex.jumping && !this.tRex.ducking) {
                     // Duck.
                     this.tRex.setDuck(true);
+                    this.duckScore += 1;
                 }
             }
         },
@@ -789,8 +794,8 @@
             }
 
             // Update the high score.
-            if (this.distanceRan > this.highestScore) {
-                this.highestScore = Math.ceil(this.distanceRan);
+            if (this.duckScore > this.highestScore) {
+                this.highestScore = Math.ceil(this.duckScore);
                 this.distanceMeter.setHighScore(this.highestScore);
             }
 
@@ -822,6 +827,7 @@
                 this.playing = true;
                 this.crashed = false;
                 this.distanceRan = 0;
+                this.duckScore = 0;
                 this.setSpeed(this.config.SPEED);
                 this.time = getTimeStamp();
                 this.containerEl.classList.remove(Runner.classes.CRASHED);
@@ -2014,7 +2020,7 @@
             var playSound = false;
 
             if (!this.acheivement) {
-                distance = this.getActualDistance(distance);
+                //distance = this.getActualDistance(distance);
                 // Score has gone beyond the initial digit count.
                 if (distance > this.maxScore && this.maxScoreUnits ==
                     this.config.MAX_DISTANCE_UNITS) {
@@ -2088,7 +2094,7 @@
          * @param {number} distance Distance ran in pixels.
          */
         setHighScore: function (distance) {
-            distance = this.getActualDistance(distance);
+            //distance = this.getActualDistance(distance);
             var highScoreStr = (this.defaultString +
                 distance).substr(-this.maxScoreUnits);
 
